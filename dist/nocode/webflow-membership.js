@@ -285,6 +285,15 @@
         return true;
     }
   }
+
+  function utoa(data) {
+   return btoa(unescape(encodeURIComponent(data)));
+  }
+
+  function atou(b64) {
+   return decodeURIComponent(escape(atou(b64)));
+  }
+  
   function getCookie(name) {
     var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
     if (match)
@@ -850,7 +859,7 @@
         form.addEventListener("submit", (e) => {
           let emailInput = form.querySelector("#wf-log-in-email");
           let userEmail = emailInput.value;
-          let userKey = btoa(userEmail);
+          let userKey = utoa(userEmail);
           localStorage.setItem("StorageKeys.userKey", userKey);
         });
       });
@@ -900,7 +909,7 @@
       var userKey;
       const userKeyEncoded = localStorage.getItem(StorageKeys.userKey);
       if (userKeyEncoded) {
-        return atob(userKeyEncoded);
+        return atou(userKeyEncoded);
       }
     }
     async loadUserInfoAsync() {
@@ -1088,7 +1097,7 @@
       this.debug.debug("merged", userData);
       sessionStorage.setItem(
         StorageKeys.user,
-        btoa(JSON.stringify(userData))
+        utoa(JSON.stringify(userData))
       );
       if (this.config.dataBind) {
         this.debug.debug("databinding", userData);
@@ -1119,7 +1128,7 @@
       this.debug.debug("getting user.");
       const user = new Sa5User();
       user.fromJSON(
-        JSON.parse(atob(userInfo))
+        JSON.parse(atou(userInfo))
       );
       this.debug.groupEnd();
       return user;
